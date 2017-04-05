@@ -13,17 +13,14 @@ class run:
 		self.err_desc = "\n  Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc + "\n"
 
 	def read_ini(self, ini_file):
+		cfg = {}
 		config = configparser.ConfigParser()
 		config.read(ini_file)
-		# print(config.sections())
-		# for section in config.sections():
-			# for key in config[section]:
-				# print(config[section][key])
-		section_name = 'path'
-		if config.has_section(section_name):
-			print(config.items(section_name))
-		else:
-			print("No such section in ini file")
+		for section in config.sections():
+			cfg[section] = {}
+			for key in config[section]:
+				cfg[section][key] = config[section][key]
+		print(cfg)
 
 	def main(self, arguments):
 		if len(arguments) > 1:

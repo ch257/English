@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*- 
 import sys
+import configparser
+from modules.RWFile import *
 
 class run:
 	def __init__(self):
@@ -11,11 +13,15 @@ class run:
 		self.err_desc = "\n  Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc + "\n"
 
 	def read_ini(self, ini_file):
-		pass
+		config = configparser.ConfigParser()
+		config.read(ini_file)
+		print(config.sections())
+		# for key in config['path']:
+			# print(config['path'][key])
 
 	def main(self, arguments):
 		if len(arguments) > 1:
-			print(arguments)
+			self.read_ini(arguments[1])
 		else:
 			self.rise_err(sys._getframe().f_code.co_name, "ini file not present")
 

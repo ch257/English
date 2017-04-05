@@ -15,11 +15,15 @@ class run:
 	def read_ini(self, ini_file):
 		config = configparser.ConfigParser()
 		config.read(ini_file)
-		print(config.sections())
-		print(config.sections())
-		print(config.sections())
-		# for key in config['path']:
-			# print(config['path'][key])
+		# print(config.sections())
+		# for section in config.sections():
+			# for key in config[section]:
+				# print(config[section][key])
+		section_name = 'path'
+		if config.has_section(section_name):
+			print(config.items(section_name))
+		else:
+			print("No such section in ini file")
 
 	def main(self, arguments):
 		if len(arguments) > 1:

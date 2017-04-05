@@ -17,6 +17,7 @@ class run:
 		config.read(ini_file)
 		print(config.sections())
 		print(config.sections())
+		print(config.sections())
 		# for key in config['path']:
 			# print(config['path'][key])
 

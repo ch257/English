@@ -3,10 +3,11 @@ import sys
 import configparser
 from modules.RWFile import *
 
-class run:
+class MainProgram:
 	def __init__(self):
 		self.err = False
 		self.err_desc = ""
+		cfg = {}
 		
 	def rise_err(self, method_name, err_desc):
 		self.err = True
@@ -20,15 +21,16 @@ class run:
 			cfg[section] = {}
 			for key in config[section]:
 				cfg[section][key] = config[section][key]
-		print(cfg)
+		return cfg
 
 	def main(self, arguments):
 		if len(arguments) > 1:
-			self.read_ini(arguments[1])
+			self.cfg = self.read_ini(arguments[1])
+			print(self.cfg)
 		else:
 			self.rise_err(sys._getframe().f_code.co_name, "ini file not present")
 
-r = run()
-r.main(sys.argv)
-if r.err:
-	print(r.err_desc)
+main_program = MainProgram()
+main_program.main(sys.argv)
+if main_program.err:
+	print(MainProgram.err_desc)

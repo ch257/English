@@ -26,7 +26,10 @@ class MainProgram:
 	def main(self, arguments):
 		if len(arguments) > 1:
 			self.cfg = self.read_ini(arguments[1])
-			print(self.cfg)
+			# --------- write your code here ---------
+			print(self.cfg) # print config
+			
+			# ---------------------------------------------
 		else:
 			self.rise_err(sys._getframe().f_code.co_name, "ini file not present")
 

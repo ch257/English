@@ -28,8 +28,10 @@ class MainProgram:
 			self.cfg = self.read_ini(arguments[1])
 			# --------- write your code here ---------
 			dict_parser = DictParser()
-			
-			dict_parser.parse(self.cfg['path']['work_folder'], self.cfg['params']['dict_name'])
+			work_folder = self.cfg['path']['work_folder']
+			dict_name = self.cfg['params']['dict_name']
+			output_folder = self.cfg['path']['output_folder']
+			dict_parser.parse(work_folder, dict_name, output_folder)
 			if (dict_parser.err):
 				self.rise_err(sys._getframe().f_code.co_name, dict_parser.err_desc)
 			# ---------------------------------------------

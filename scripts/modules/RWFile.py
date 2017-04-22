@@ -6,7 +6,6 @@ import shutil
 class RWFile:
 	def __init__(self, file_folder, file_name, open_mode, coding):
 		self.handler = None
-		self.EOF = False
 		self.err = False
 		self.err_desc = ''
 		self.file_folder = file_folder
@@ -23,7 +22,7 @@ class RWFile:
 			elif self.open_mode == "read":
 				self.handler = open(self.file, 'r', encoding = coding)
 			elif self.open_mode == "write_binary":
-				self.handler = open(self.file, 'wb', encoding = coding)
+				self.handler = open(self.file, 'wb')
 			elif self.open_mode == "write":
 				self.handler = open(self.file, 'w', encoding = coding)
 			elif self.open_mode == "append":
@@ -51,13 +50,9 @@ class RWFile:
 					self.rise_err(sys._getframe().f_code.co_name, "Not enough permissions to " + self.open_mode + " file:'" + self.file + "'")
 
 	def read_line(self):
-		line = self.handler.readline()
-		if line:
-			return line
-		else:
-			self.EOF = True
+		return self.handler.readline()
 
-	def write_line(self, line):
+	def write(self, line):
 		self.handler.write(line)
 
 	def close_file(self):

@@ -10,21 +10,54 @@ class DictParser:
 		self.err = True
 		self.err_desc = "\n  Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc + "\n"
 
-	def parse(self, work_folder, dict_name, output_folder):
+	def format_number(self, nmbr):
+		zeros = "000"
+		str_nmbr = str(nmbr);
+		return zeros[0:(len(zeros) - len(str_nmbr))] + str_nmbr
+
+	def split_into_double_pages(self, work_folder, dict_name, double_pages_folder):
 		dict_file = RWFile(work_folder, dict_name, 'read_binary', '')
-		output_file = RWFile(output_folder, 'test.txt', 'write_binary', '')
+		double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
 		if (dict_file.err):
 			self.rise_err(sys._getframe().f_code.co_name, dict_file.err_desc)
-		elif (output_file.err):
-			self.rise_err(sys._getframe().f_code.co_name, output_file.err_desc)
+		elif (double_pages_directory.err):
+			self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
 		else :
+			double_pages_cnt = 0
+			output_file = None
+			double_pages_directory.clear_folder()
 			while True:
 				line = dict_file.read_line()
 				if (line):
-					# print(line)
+					if (line[0] == 12):
+						if (output_file):
+							output_file.close_file()
+						output_file = RWFile(double_pages_folder, self.format_number(double_pages_cnt) + '.txt', 'write_binary', '')
+						if (output_file.err):
+							self.rise_err(sys._getframe().f_code.co_name, output_file.err_desc)
+							return None
+						double_pages_cnt += 1
 					output_file.write(line)
 				else:
 					break
 		dict_file.close_file()
 		output_file.close_file()
+	
+	def find_columns_in_double_pages(self, double_pages_folder):
+		double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
+		if (double_pages_directory.err):
+			self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
+		else:
+			for double_pages_file_name in double_pages_directory.folder_list:
+				print(double_pages_file_name)
+		
+	def split_into_single_pages(self, double_pages_folder, single_pages_folder):
+		double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
+		if (double_pages_directory.err):
+			self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
+		else:
+			for double_pages_file_name in double_pages_directory.folder_list:
+				print(double_pages_file_name)
+		
+			
 		

@@ -31,10 +31,27 @@ class MainProgram:
 			work_folder = self.cfg['path']['work_folder']
 			dict_name = self.cfg['params']['dict_name']
 			output_folder = self.cfg['path']['output_folder']
-			dict_parser.parse(work_folder, dict_name, output_folder)
+			double_pages_folder = self.cfg ['path']['double_pages_folder']
+			single_pages_folder = self.cfg ['path']['single_pages_folder']
+
+			dict_parser.split_into_double_pages(work_folder, dict_name, double_pages_folder)
 			if (dict_parser.err):
 				self.rise_err(sys._getframe().f_code.co_name, dict_parser.err_desc)
+			else:
+				print("01 - split_into_double_pages: OK")
+				dict_parser.find_columns_in_double_pages(double_pages_folder)
+				if (dict_parser.err):
+					self.rise_err(sys._getframe().f_code.co_name, dict_parser.err_desc)
+				else:
+					print("02 - find_columns_in_double_pages: OK")
+					dict_parser.split_into_single_pages(double_pages_folder, single_pages_folder)
+					if (dict_parser.err):
+						self.rise_err(sys._getframe().f_code.co_name, dict_parser.err_desc)
+					else:
+						print("03 - split_into_single_pages: OK")
+						pass
 			# ---------------------------------------------
+			
 		else:
 			self.rise_err(sys._getframe().f_code.co_name, "ini file not present")
 

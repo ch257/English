@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 import sys
 import configparser
-from modules.RWFile import *
+from modules.DictParser import *
 
 class MainProgram:
 	def __init__(self):
@@ -27,8 +27,11 @@ class MainProgram:
 		if len(arguments) > 1:
 			self.cfg = self.read_ini(arguments[1])
 			# --------- write your code here ---------
-			print(self.cfg) # print config
+			dict_parser = DictParser()
 			
+			dict_parser.parse(self.cfg['path']['work_folder'], self.cfg['params']['dict_name'])
+			if (dict_parser.err):
+				self.rise_err(sys._getframe().f_code.co_name, dict_parser.err_desc)
 			# ---------------------------------------------
 		else:
 			self.rise_err(sys._getframe().f_code.co_name, "ini file not present")
@@ -36,4 +39,4 @@ class MainProgram:
 main_program = MainProgram()
 main_program.main(sys.argv)
 if main_program.err:
-	print(MainProgram.err_desc)
+	print(main_program.err_desc)

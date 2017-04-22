@@ -105,7 +105,7 @@ class RWFile:
 			subfolder_path_length = len(self.file_name)
 			subfolder_name = ""
 			while cnt < subfolder_path_length:
-				if self.file_name[cnt] == "\\" or	self.file_name[cnt] == "/":
+				if self.file_name[cnt] == "\\" or self.file_name[cnt] == "/":
 					subfolders_list.append(subfolder_name)
 					subfolder_name = ""
 				else:
@@ -124,4 +124,4 @@ class RWFile:
 
 	def rise_err(self, method_name, err_desc):
 		self.err = True
-		self.err_desc = "\n	Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc + "\n"
+		self.err_desc = "\n Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc

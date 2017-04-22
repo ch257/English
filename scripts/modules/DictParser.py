@@ -8,7 +8,7 @@ class DictParser:
 
 	def rise_err(self, method_name, err_desc):
 		self.err = True
-		self.err_desc = "\n  Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc + "\n"
+		self.err_desc = "\n Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc
 
 	def format_number(self, nmbr):
 		zeros = "000"
@@ -35,13 +35,15 @@ class DictParser:
 						output_file = RWFile(double_pages_folder, self.format_number(double_pages_cnt) + '.txt', 'write_binary', '')
 						if (output_file.err):
 							self.rise_err(sys._getframe().f_code.co_name, output_file.err_desc)
-							return None
+							break
 						double_pages_cnt += 1
 					output_file.write(line)
 				else:
+					if (output_file):
+						output_file.close_file()
 					break
 		dict_file.close_file()
-		output_file.close_file()
+		
 	
 	def find_columns_in_double_pages(self, double_pages_folder):
 		double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
@@ -57,7 +59,8 @@ class DictParser:
 			self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
 		else:
 			for double_pages_file_name in double_pages_directory.folder_list:
-				print(double_pages_file_name)
+				# print(double_pages_file_name)
+				pass
 		
 			
 		

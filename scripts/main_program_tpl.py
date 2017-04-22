@@ -11,7 +11,7 @@ class MainProgram:
 		
 	def rise_err(self, method_name, err_desc):
 		self.err = True
-		self.err_desc = "\n  Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc + "\n"
+		self.err_desc = "\n  Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc
 
 	def read_ini(self, ini_file):
 		cfg = {}

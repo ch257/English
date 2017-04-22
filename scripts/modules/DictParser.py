@@ -10,8 +10,7 @@ class DictParser:
 		self.err = True
 		self.err_desc = "\n Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc
 
-	def format_number(self, nmbr):
-		zeros = "000"
+	def format_number(self, zeros, nmbr):
 		str_nmbr = str(nmbr);
 		return zeros[0:(len(zeros) - len(str_nmbr))] + str_nmbr
 
@@ -32,7 +31,7 @@ class DictParser:
 					if (line[0] == 12):
 						if (output_file):
 							output_file.close_file()
-						output_file = RWFile(double_pages_folder, self.format_number(double_pages_cnt) + '.txt', 'write_binary', '')
+						output_file = RWFile(double_pages_folder, self.format_number("000", double_pages_cnt) + '.txt', 'write_binary', '')
 						if (output_file.err):
 							self.rise_err(sys._getframe().f_code.co_name, output_file.err_desc)
 							break

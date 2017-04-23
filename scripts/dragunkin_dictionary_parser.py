@@ -45,7 +45,7 @@ class MainProgram:
 			double_pages_folder = self.cfg ['path']['double_pages_folder']
 			single_pages_folder = self.cfg ['path']['single_pages_folder']
 
-			dict_parser.split_into_double_pages(work_folder, dict_name, double_pages_folder)
+			# dict_parser.split_into_double_pages(work_folder, dict_name, double_pages_folder)
 			dict_parser.find_columns_in_double_pages(double_pages_folder)
 			dict_parser.split_into_single_pages(double_pages_folder, single_pages_folder)
 

@@ -15,51 +15,52 @@ class DictParser:
 		return zeros[0:(len(zeros) - len(str_nmbr))] + str_nmbr
 
 	def split_into_double_pages(self, work_folder, dict_name, double_pages_folder):
-		dict_file = RWFile(work_folder, dict_name, 'read_binary', '')
-		double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
-		if (dict_file.err):
-			self.rise_err(sys._getframe().f_code.co_name, dict_file.err_desc)
-		elif (double_pages_directory.err):
-			self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
-		else :
+		if not self.err:	
+			dict_file = RWFile(work_folder, dict_name, 'read_binary', '')
+			double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
 			double_pages_cnt = 0
 			output_file = None
 			double_pages_directory.clear_folder()
-			while True:
+			while not dict_file.err:
 				line = dict_file.read_line()
 				if (line):
 					if (line[0] == 12):
-						if (output_file):
+						if output_file:
 							output_file.close_file()
 						output_file = RWFile(double_pages_folder, self.format_number("000", double_pages_cnt) + '.txt', 'write_binary', '')
-						if (output_file.err):
-							self.rise_err(sys._getframe().f_code.co_name, output_file.err_desc)
+						if output_file.err:
 							break
 						double_pages_cnt += 1
 					output_file.write(line)
 				else:
-					if (output_file):
+					if output_file:
 						output_file.close_file()
 					break
-		dict_file.close_file()
-		
-	
-	def find_columns_in_double_pages(self, double_pages_folder):
-		double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
-		if (double_pages_directory.err):
-			self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
-		else:
-			for double_pages_file_name in double_pages_directory.folder_list:
-				print(double_pages_file_name)
-		
-	def split_into_single_pages(self, double_pages_folder, single_pages_folder):
-		double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
-		if (double_pages_directory.err):
-			self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
-		else:
-			for double_pages_file_name in double_pages_directory.folder_list:
-				# print(double_pages_file_name)
-				pass
-		
+			dict_file.close_file()
+			
+			if dict_file.err:
+				self.rise_err(sys._getframe().f_code.co_name, dict_file.err_desc)
+			elif (double_pages_directory.err):
+				self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
+			elif (output_file.err):
+				self.rise_err(sys._getframe().f_code.co_name, output_file.err_desc)
 			
 		
+	def find_columns_in_double_pages(self, double_pages_folder):
+		if not self.err:
+			double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
+			if (double_pages_directory.err):
+				self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
+			else:
+				for double_pages_file_name in double_pages_directory.folder_list:
+					print(double_pages_file_name)
+		
+	def split_into_single_pages(self, double_pages_folder, single_pages_folder):
+		if not self.err:
+			double_pages_directory = RWFile(double_pages_folder, '', 'in_folder', '')
+			if (double_pages_directory.err):
+				self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)
+			else:
+				for double_pages_file_name in double_pages_directory.folder_list:
+					# print(double_pages_file_name)
+					pass

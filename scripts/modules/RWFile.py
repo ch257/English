@@ -61,66 +61,70 @@ class RWFile:
 			self.handler = None
 
 	def delete_files_in_folder(self):
-		for file in self.folder_list:
-			if not os.path.isdir(self.file_folder + file):
-				try:
-					os.remove(self.file_folder + file)
-				except FileNotFoundError:
-					self.rise_err(sys._getframe().f_code.co_name, "Try to remove non existent file:'" + self.file_folder + file + "'")
-					break
-				except PermissionError:
-					self.rise_err(sys._getframe().f_code.co_name, "Not enough permissions to remove file:'" + self.file_folder + file + "'")
-					break
+		if not self.err:
+			for file in self.folder_list:
+				if not os.path.isdir(self.file_folder + file):
+					try:
+						os.remove(self.file_folder + file)
+					except FileNotFoundError:
+						self.rise_err(sys._getframe().f_code.co_name, "Try to remove non existent file:'" + self.file_folder + file + "'")
+						break
+					except PermissionError:
+						self.rise_err(sys._getframe().f_code.co_name, "Not enough permissions to remove file:'" + self.file_folder + file + "'")
+						break
 
 	def delete_subfolders_in_folder(self):
-		for file in self.folder_list:
-			if os.path.isdir(self.file_folder + file):	
-				try:
-					shutil.rmtree(self.file_folder + file)
-				except FileNotFoundError:
-					self.rise_err(sys._getframe().f_code.co_name, "Try to remove non existent subfolder:'" + self.file_folder + file + "'")
-					break
-				except PermissionError:
-					self.rise_err(sys._getframe().f_code.co_name, "Not enough permissions to remove subfolder:'" + self.file_folder + file + "'")
-					break
+		if not self.err:
+			for file in self.folder_list:
+				if os.path.isdir(self.file_folder + file):	
+					try:
+						shutil.rmtree(self.file_folder + file)
+					except FileNotFoundError:
+						self.rise_err(sys._getframe().f_code.co_name, "Try to remove non existent subfolder:'" + self.file_folder + file + "'")
+						break
+					except PermissionError:
+						self.rise_err(sys._getframe().f_code.co_name, "Not enough permissions to remove subfolder:'" + self.file_folder + file + "'")
+						break
 
 	def clear_folder(self):
-		for file in self.folder_list:
-			try:
-				if os.path.isdir(self.file_folder + file):
-					shutil.rmtree(self.file_folder + file)
-				else:	
-					os.remove(self.file_folder + file)
-			except FileNotFoundError:
-				self.rise_err(sys._getframe().f_code.co_name, "Try to remove non existent file or folder:'" + self.file_folder + file + "'")
-				break
-			except PermissionError:
-				self.rise_err(sys._getframe().f_code.co_name, "Not enough permissions to remove file or folder:'" + self.file_folder + file + "'")
-				break
+		if not self.err:
+			for file in self.folder_list:
+				try:
+					if os.path.isdir(self.file_folder + file):
+						shutil.rmtree(self.file_folder + file)
+					else:	
+						os.remove(self.file_folder + file)
+				except FileNotFoundError:
+					self.rise_err(sys._getframe().f_code.co_name, "Try to remove non existent file or folder:'" + self.file_folder + file + "'")
+					break
+				except PermissionError:
+					self.rise_err(sys._getframe().f_code.co_name, "Not enough permissions to remove file or folder:'" + self.file_folder + file + "'")
+					break
 
 	def create_subfolder(self):
-		if os.path.isdir(self.file_folder):
-			subfolders_list = []
-			cnt = 0
-			subfolder_path_length = len(self.file_name)
-			subfolder_name = ""
-			while cnt < subfolder_path_length:
-				if self.file_name[cnt] == "\\" or self.file_name[cnt] == "/":
+		if not self.err:
+			if os.path.isdir(self.file_folder):
+				subfolders_list = []
+				cnt = 0
+				subfolder_path_length = len(self.file_name)
+				subfolder_name = ""
+				while cnt < subfolder_path_length:
+					if self.file_name[cnt] == "\\" or self.file_name[cnt] == "/":
+						subfolders_list.append(subfolder_name)
+						subfolder_name = ""
+					else:
+						subfolder_name = subfolder_name + self.file_name[cnt]
+					cnt = cnt + 1
+				if subfolder_name:
 					subfolders_list.append(subfolder_name)
-					subfolder_name = ""
-				else:
-					subfolder_name = subfolder_name + self.file_name[cnt]
-				cnt = cnt + 1
-			if subfolder_name:
-				subfolders_list.append(subfolder_name)
 
-			parent_folder_path = self.file_folder
-			for subfolder_name in subfolders_list:
-				if not os.path.isdir(parent_folder_path + subfolder_name):
-					os.mkdir(parent_folder_path + subfolder_name)
-				parent_folder_path = parent_folder_path + subfolder_name + "\\"
-		else:
-			self.rise_err(sys._getframe().f_code.co_name, "No such folder:'" + self.file_folder + "'")
+				parent_folder_path = self.file_folder
+				for subfolder_name in subfolders_list:
+					if not os.path.isdir(parent_folder_path + subfolder_name):
+						os.mkdir(parent_folder_path + subfolder_name)
+					parent_folder_path = parent_folder_path + subfolder_name + "\\"
+			else:
+				self.rise_err(sys._getframe().f_code.co_name, "No such folder:'" + self.file_folder + "'")
 
 	def rise_err(self, method_name, err_desc):
 		self.err = True

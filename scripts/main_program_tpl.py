@@ -2,6 +2,7 @@
 import sys
 import configparser
 from modules.TemplateClass import *
+from modules.RWFile import *
 
 class MainProgram:
 	def __init__(self):
@@ -23,8 +24,18 @@ class MainProgram:
 				cfg[section][key] = config[section][key]
 		return cfg
 
+	def read_cfg(self, arguments):
+		if len(arguments) < 2:
+			self.rise_err(sys._getframe().f_code.co_name, "ini file name is not delivered")
+		else:
+			ini_file = RWFile('', arguments[1], 'read_binary', '')
+			if ini_file.err:
+				self.rise_err(sys._getframe().f_code.co_name, ini_file.err_desc)
+			ini_file.close_file()
+
 	def main(self, arguments):
-		if len(arguments) > 1:
+		self.read_cfg(arguments)
+		if not self.err:
 			self.cfg = self.read_ini(arguments[1])
 			# --------- write your code here ---------
 			print(self.cfg) # print config
@@ -34,8 +45,11 @@ class MainProgram:
 			if (template.err):
 				self.rise_err(sys._getframe().f_code.co_name, template.err_desc)
 			# ---------------------------------------------
+		
+		if self.err:
+			print(self.err_desc)
 		else:
-			self.rise_err(sys._getframe().f_code.co_name, "ini file not present")
+			print("OK")
 
 main_program = MainProgram()
 main_program.main(sys.argv)

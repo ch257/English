@@ -46,15 +46,18 @@ class MainProgram:
 			double_pages_columns_folder = self.cfg ['path']['double_pages_columns_folder']
 			single_pages_folder = self.cfg ['path']['single_pages_folder']
 
-			# dict_parser.split_into_double_pages(work_folder, dict_name, double_pages_folder)
+			dict_parser.split_into_double_pages(work_folder, dict_name, double_pages_folder)
 			dict_parser.find_columns_in_double_pages(double_pages_folder, double_pages_columns_folder)
 			dict_parser.split_into_single_pages(double_pages_folder, single_pages_folder)
 
 
 			if dict_parser.err:
 				self.rise_err(sys._getframe().f_code.co_name, dict_parser.err_desc)
-			else:
-				print("OK")
+		
+		if self.err:
+			print(self.err_desc)
+		else:
+			print("OK")
 
 						
 

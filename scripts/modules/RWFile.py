@@ -51,6 +51,9 @@ class RWFile:
 
 	def read_line(self):
 		return self.handler.readline()
+	
+	def read_symbols(self, qty):
+		return self.handler.read(qty)
 
 	def write(self, line):
 		self.handler.write(line)

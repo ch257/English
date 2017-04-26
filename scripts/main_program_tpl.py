@@ -45,10 +45,6 @@ class MainProgram:
 			if (template.err):
 				self.rise_err(sys._getframe().f_code.co_name, template.err_desc)
 			# ---------------------------------------------
-		
-		if self.err:
-			print(self.err_desc)
-		else:
 			print("OK")
 
 main_program = MainProgram()

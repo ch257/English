@@ -53,10 +53,6 @@ class MainProgram:
 
 			if dict_parser.err:
 				self.rise_err(sys._getframe().f_code.co_name, dict_parser.err_desc)
-		
-		if self.err:
-			print(self.err_desc)
-		else:
 			print("OK")
 
 						

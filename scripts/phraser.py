@@ -41,7 +41,13 @@ class MainProgram:
 			phrase_manager = PhraseManager()	
 			work_folder = self.cfg['path']['work_folder']
 			text_file_name  = self.cfg['params']['text_file_name']
-			phrase_manager.find_phrase(work_folder, text_file_name)
+			time_labels_file_name = self.cfg['params']['time_labels_file_name']
+			phrase_manager.find_text_words(work_folder, text_file_name)
+			phrase_manager.find_time_labels(work_folder, time_labels_file_name)
+			# print(phrase_manager.text_words)
+			# print(phrase_manager.text_labels)
+			print(phrase_manager.time_labels)
+			
 			
 			if (phrase_manager.err):
 				self.rise_err(sys._getframe().f_code.co_name, phrase_manager.err_desc)

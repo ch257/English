@@ -62,33 +62,94 @@ class PhraseManager:
 					splitted_line = line.split(chr(32))
 					time_label = float(splitted_line[0])
 					word_label = splitted_line[1].strip('\n')
-					
-					# print(word_label)
 						
 					not_found = True
-					if words_cnt == len(self.text_words):
-						words_cnt = 0
+					# if words_cnt == len(self.text_words):
+						# words_cnt = 0
 					while words_cnt < len(self.text_words) and not_found: 
 						if word_label == 'SENT-END':
 							break
-						print(word_label, self.text_words[words_cnt])
 						
 						if word_label == self.text_words[words_cnt]:
 							self.time_labels[words_cnt] = time_label
 							not_found = False
 						words_cnt += 1
-					
 				else:
 					break
-			
 			time_labels_file.close_file()
-			
-			
 			
 		if time_labels_file.err:
 				self.rise_err(sys._getframe().f_code.co_name, text_file.err_desc)
 	
+	def determine_action(self, manage_seq):
+		offset = ''
+		action = ''
+		for smb in manage_seq:
+			if ord(smb) > 47 and ord(smb)< 58:
+				offset += smb
+			else:
+				action += smb
+		return action, offset
+		
 	
-	def find_phrase(self, work_folder, text_file_name):
+	def find_phrase(self):
 		if not self.err:
-			pass
+			self.text_words = {0:'', 1:'', 2:'', 3:'', 4:'', 5:''}
+			words_cnt = 0
+			phrase_start = words_cnt
+			phrase_end = phrase_start + 1
+			phrase = self.text_words[words_cnt]
+			while True:
+				print(phrase_start, phrase_end)
+				manage_seq = input()
+				action, offset = self.determine_action(manage_seq)
+				
+				if action == '+':
+					int_offset = int(offset)
+					if phrase_end + int_offset < len(self.text_words):
+						phrase_end += int_offset
+					else:
+						phrase_end = len(self.text_words) - 1
+				
+				elif action == '-':
+					int_offset = int(offset)
+					if phrase_end - int_offset > 1:
+						phrase_end -= int_offset
+					else:
+						phrase_end = 1
+				
+				elif action == '++':
+					int_offset = int(offset)
+					if phrase_end + int_offset < len(self.text_words):
+						phrase_start += int_offset
+						phrase_end += int_offset
+					else:
+						phrase_start = len(self.text_words) + phrase_start - phrase_end - 1
+						phrase_end = len(self.text_words) - 1
+					
+				elif action == '--':
+					int_offset = int(offset)
+					if phrase_start - int_offset > 1:
+						phrase_start -= int_offset
+						phrase_end -= int_offset
+					else:
+						phrase_end = - phrase_start + phrase_end
+						phrase_start = 0
+				
+				elif  manage_seq == 'q':
+					break
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			

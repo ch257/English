@@ -80,14 +80,27 @@ class DictParser:
 					else:
 						break
 					double_pages_file.close_file()
+					
 					if not double_pages_columns_file.err:
+						columns_list = []
+						for column_key in columns:
+							max = 0
+							key_max = ''
+							for column_key in columns:
+								if columns[column_key] > max:
+									if columns[column_key] not in columns_list:
+										max = columns[column_key]
+										key_max = column_key
+								columns_list.append(columns[key_max])
+
 						columns_line = ''
 						for column_key in columns:
 							columns_line += str(column_key) + ':' + str(columns[column_key]) +'\t'
 						double_pages_columns_file.write(columns_line + '\n')
 						
 					double_pages_columns_file.close_file()
-					# break #----------------------------! first file only
+					print(columns_list)
+					break #----------------------------! first file only
 			
 			if double_pages_directory.err:
 				self.rise_err(sys._getframe().f_code.co_name, double_pages_directory.err_desc)

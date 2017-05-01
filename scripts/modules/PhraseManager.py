@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*- 
 from modules.RWFile import *
+from modules.AudioTools import *
 
 class PhraseManager:
 	def __init__(self):
@@ -8,7 +9,9 @@ class PhraseManager:
 		
 		self.text_words = {}
 		self.text_labels = {}
+		self.text_source_words = {}
 		self.time_labels = {}
+		self.audio_tools = AudioTools()
 
 	def rise_err(self, method_name, err_desc):
 		self.err = True
@@ -23,17 +26,22 @@ class PhraseManager:
 			excluded_symbols = (chr(32), '\n', '\t', '?', '!', '.', ',', '"', '-', ':', ';')
 			text_file = RWFile(work_folder, text_file_name, 'read', 'utf-8')
 			word = ''
+			source_word = ''
 			words_satarted = False
 			symbols_cnt = 0
 			words_cnt = 0
+			delimeters = ''
 			while not text_file.err:
 				smb = text_file.read_symbols(1)
 				if smb:
 					if smb in excluded_symbols:
+						delimeters += smb.strip('\n')
 						if words_satarted:
+							self.text_source_words[words_cnt] = word + delimeters
 							self.text_words[words_cnt] = word.upper()
 							self.text_labels[words_cnt] = symbols_cnt
 							word = ''
+							delimeters = ''
 							words_satarted = False
 							words_cnt += 1
 					else:
@@ -89,54 +97,66 @@ class PhraseManager:
 				offset += smb
 			else:
 				action += smb
-		return action, offset
+		if not offset:
+			offset = '1'
+		return action, int(offset)
 		
+	def glue_phrase(self, phrase_start, phrase_end):
+		words_cnt = phrase_start
+		phrase = ''
+		while words_cnt < phrase_end:
+			phrase += self.text_source_words[words_cnt]
+			words_cnt += 1
+		return phrase
 	
-	def find_phrase(self):
+	def create_media(self, work_folder, audio_file_name, output_folder, phrase_start, phrase_end):
+		print(self.glue_phrase(phrase_start, phrase_end))
+		start_time = self.time_labels[phrase_start]
+		end_time = self.time_labels[phrase_end]
+		
+		self.audio_tools.cut_sample(work_folder, audio_file_name, output_folder, start_time, end_time)
+	
+	def find_phrase(self, work_folder, audio_file_name, output_folder, mp3splt_folder):
 		if not self.err:
-			self.text_words = {0:'', 1:'', 2:'', 3:'', 4:'', 5:''}
+			# self.text_words = {0:'', 1:'', 2:'', 3:'', 4:'', 5:''}
 			words_cnt = 0
 			phrase_start = words_cnt
 			phrase_end = phrase_start + 1
 			phrase = self.text_words[words_cnt]
 			while True:
-				print(phrase_start, phrase_end)
+				self.create_media(work_folder, audio_file_name, output_folder, phrase_start, phrase_end)
 				manage_seq = input()
 				action, offset = self.determine_action(manage_seq)
 				
 				if action == '+':
-					int_offset = int(offset)
-					if phrase_end + int_offset < len(self.text_words):
-						phrase_end += int_offset
+					if phrase_end + offset < len(self.text_words):
+						phrase_end += offset
 					else:
 						phrase_end = len(self.text_words) - 1
 				
 				elif action == '-':
-					int_offset = int(offset)
-					if phrase_end - int_offset > 1:
-						phrase_end -= int_offset
+					if phrase_end - offset > 1:
+						phrase_end -= offset
 					else:
 						phrase_end = 1
 				
 				elif action == '++':
-					int_offset = int(offset)
-					if phrase_end + int_offset < len(self.text_words):
-						phrase_start += int_offset
-						phrase_end += int_offset
+					if phrase_end + offset < len(self.text_words):
+						phrase_start += offset
+						phrase_end += offset
 					else:
 						phrase_start = len(self.text_words) + phrase_start - phrase_end - 1
 						phrase_end = len(self.text_words) - 1
 					
 				elif action == '--':
-					int_offset = int(offset)
-					if phrase_start - int_offset > 1:
-						phrase_start -= int_offset
-						phrase_end -= int_offset
+					if phrase_start - offset > 1:
+						phrase_start -= offset
+						phrase_end -= offset
 					else:
 						phrase_end = - phrase_start + phrase_end
 						phrase_start = 0
 				
-				elif  manage_seq == 'q':
+				elif action == 'q':
 					break
 
 			

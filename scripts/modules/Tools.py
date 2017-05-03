@@ -16,3 +16,7 @@ class Tools:
 			return  True
 		else:
 			return False
+			
+	def format_number(self, zeros, nmbr):
+		str_nmbr = str(nmbr);
+		return zeros[0:(len(zeros) - len(str_nmbr))] + str_nmbr

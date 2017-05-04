@@ -13,8 +13,7 @@ class PhraseManager:
 		self.text_labels = {}
 		self.text_source_words = {}
 		self.time_labels = {}
-		self.text_tools = TextTools()
-		self.audio_tools = AudioTools()
+		# self.audio_tools = AudioTools()
 
 	def rise_err(self, method_name, err_desc):
 		self.err = True
@@ -48,13 +47,14 @@ class PhraseManager:
 		# self.audio_tools.cut_sample(work_folder, audio_file_name, output_folder, start_time, end_time)
 	
 	def find_phrase(self):
-		if not self.err:
-			self.text_tools.find_text_words(self.cfg)
-			self.text_tools.find_time_labels(self.cfg)
-			
-			self.text_words = self.text_tools.text_words
-			self.text_source_words = self.text_tools.text_source_words
-			self.time_labels = self.text_tools.time_labels
+		text_tools = TextTools()
+		text_tools.find_text_words(self.cfg)
+		text_tools.find_time_labels(self.cfg)
+		
+		if not text_tools.err:
+			self.text_words = text_tools.text_words
+			self.text_source_words = text_tools.text_source_words
+			self.time_labels = text_tools.time_labels
 			
 			# self.text_words = {0:'', 1:'', 2:'', 3:'', 4:'', 5:''}
 			words_cnt = 0
@@ -96,7 +96,9 @@ class PhraseManager:
 				
 				elif action == 'q':
 					break
-
+			
+		if text_tools.err:
+			self.rise_err(sys._getframe().f_code.co_name, text_tools.err_desc)
 			
 			
 			

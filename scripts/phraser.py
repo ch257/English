@@ -49,7 +49,7 @@ class MainProgram:
 				# print(text_tools.text_words[words_cnt], text_tools.text_labels[words_cnt], text_tools.time_labels.get(words_cnt), text_tools.text_source_words[words_cnt])
 			
 			if (phrase_manger.err):
-				self.rise_err(sys._getframe().f_code.co_name, text_tools.err_desc)
+				self.rise_err(sys._getframe().f_code.co_name, phrase_manger.err_desc)
 			# ---------------------------------------------
 			print("OK")
 

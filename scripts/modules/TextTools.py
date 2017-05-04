@@ -17,13 +17,18 @@ class TextTools:
 
 	def rise_err(self, method_name, err_desc):
 		self.err = True
-		self.err_desc = "\n	Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc
+		self.err_desc = "\n Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc
 		
 	def find_text_words(self, cfg):	
-		if not self.err:
-			work_folder = cfg['path']['work_folder']
-			text_file_name = cfg['params']['text_file_name']
+		work_folder = cfg.get('path').get('work_folder') # cfg['path']['work_folder']
+		text_file_name = cfg.get('params') # cfg['params']['text_file_name']
+		if text_file_name:
+			text_file_name = text_file_name.get('text_file_name')
+		
+		if not text_file_name:
+			self.rise_err(sys._getframe().f_code.co_name, 'wrong ini file')
 			
+		if not self.err:
 			excluded_symbols = (chr(32), '\n', '\t', '?', '!', '.', ',', '"', '-', ':', ';')
 			text_file = RWFile(work_folder, text_file_name, 'read', 'utf-8')
 			word = ''
@@ -90,5 +95,5 @@ class TextTools:
 					break
 			time_labels_file.close_file()
 			
-		if time_labels_file.err:
-				self.rise_err(sys._getframe().f_code.co_name, text_file.err_desc)
+			if time_labels_file.err:
+					self.rise_err(sys._getframe().f_code.co_name, text_file.err_desc)

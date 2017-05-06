@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 import os
 import sys
-from modules.Tools import *
+# from modules.Tools import *
 from modules.RWFile import *
 
 class TextTools:
@@ -19,16 +19,12 @@ class TextTools:
 		self.err = True
 		self.err_desc = "\n Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc
 		
-	def find_text_words(self, cfg):	
-		work_folder = cfg.get('path').get('work_folder') # cfg['path']['work_folder']
-		text_file_name = cfg.get('params') # cfg['params']['text_file_name']
-		if text_file_name:
-			text_file_name = text_file_name.get('text_file_name')
-		
-		if not text_file_name:
-			self.rise_err(sys._getframe().f_code.co_name, 'wrong ini file')
-			
-		if not self.err:
+	def find_text_words(self, cfg_reader):	
+		work_folder = cfg_reader.get_parameter('path', 'work_folder')
+		text_file_name = cfg_reader.get_parameter('file_names', 'text_file_name')
+		if cfg_reader.err:
+			self.rise_err(sys._getframe().f_code.co_name, cfg_reader.err_desc)
+		else:	
 			excluded_symbols = (chr(32), '\n', '\t', '?', '!', '.', ',', '"', '-', ':', ';')
 			text_file = RWFile(work_folder, text_file_name, 'read', 'utf-8')
 			word = ''
@@ -56,7 +52,6 @@ class TextTools:
 						else:
 							word += smb
 							words_satarted = True
-					
 				else:
 					break
 				symbols_cnt += 1
@@ -66,18 +61,19 @@ class TextTools:
 			if text_file.err:
 				self.rise_err(sys._getframe().f_code.co_name, text_file.err_desc)
 	
-	def find_time_labels(self, cfg):
-		if not self.err:
-			work_folder = cfg['path']['work_folder']
-			time_labels_file_name = cfg['params']['time_labels_file_name']
-			
+	def find_time_labels(self, cfg_reader):
+		work_folder = cfg_reader.get_parameter('path', 'work_folder')
+		time_labels_file_name = cfg_reader.get_parameter('file_names', 'time_labels_file_name')
+		if cfg_reader.err:
+			self.rise_err(sys._getframe().f_code.co_name, cfg_reader.err_desc)
+		else:
 			time_labels_file = RWFile(work_folder, time_labels_file_name, 'read', 'utf-8')
 			words_cnt = 0
 			while not time_labels_file.err:
 				line = time_labels_file.read_line()
 				if line:
 					splitted_line = line.split(chr(32))
-					time_label = float(splitted_line[0])
+					time_label = splitted_line[0] #float(splitted_line[0])
 					word_label = splitted_line[1].strip('\n')
 						
 					not_found = True

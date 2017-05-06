@@ -40,7 +40,7 @@ class CfgReader:
 			if self.cfg:
 				ini_section = self.cfg.get(section)
 				if ini_section:
-					ini_key_value = section.get(key)
+					ini_key_value = ini_section.get(key)
 					if ini_key_value:
 						return ini_key_value
 					else:

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*- 
 from os import rename
 import sys
+import subprocess
 from modules.Tools import *
 
 class AudioTools:
@@ -82,4 +83,27 @@ class AudioTools:
 		cmd = cmd.replace('/', '\\')
 		print(cmd)
 		os.system(cmd)
+		
+	def play_mp3(self, cfg_reader):
+		mp3player_folder = cfg_reader.get_parameter('path', 'mp3player_folder')
+		mp3_file_folder = cfg_reader.get_parameter('path', 'output_folder')
+		
+		mp3player_file = cfg_reader.get_parameter('file_names', 'mp3player_file')
+		mp3_file_name = cfg_reader.get_parameter('file_names', 'mp3_output_sample_file_name') + '.mp3'
+		
+		cmd = 	mp3player_folder + mp3player_file + chr(32) + \
+				mp3_file_folder + mp3_file_name
+		cmd = cmd.replace('/', '\\')
+		print(cmd)
+		subprocess.Popen(cmd, shell = False)
+	
+	def save_sample(self, f_name_number, cfg_reader):
+		mp3_file_folder = cfg_reader.get_parameter('path', 'output_folder')
+		
+		mp3_file_name = cfg_reader.get_parameter('file_names', 'mp3_output_sample_file_name')
+		
+		tools = Tools()
+		f_name_suffix = tools.format_number('0000', f_name_number)
+		tools.delete_file(mp3_file_folder, f_name_suffix + '.mp3')
+		rename(mp3_file_folder + mp3_file_name + '_s.mp3', mp3_file_folder + f_name_suffix + '.mp3')
 		

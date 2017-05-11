@@ -43,9 +43,9 @@ class PhraseManager:
 			words_cnt += 1
 		return phrase
 	
-	def create_media(self, phrase_start, phrase_end):
-		start_time = self.time_labels[phrase_start]
-		end_time = self.time_labels[phrase_end]
+	def create_media(self, phrase_start, phrase_end, start_time_correction, end_time_correction):
+		start_time = str(float(self.time_labels[phrase_start]) + start_time_correction / 100)
+		end_time = str(float(self.time_labels[phrase_end]) + end_time_correction / 100)
 		self.audio_tools.cut_sample(start_time, end_time, self.cfg_reader)
 		self.audio_tools.add_silence('before', self.cfg_reader)
 		
@@ -106,9 +106,31 @@ class PhraseManager:
 						phrase_start = 0
 				
 				elif action == 'm':
-					self.create_media(phrase_start, phrase_end)
+					self.create_media(phrase_start, phrase_end, 0, 0)
+					print('--------------- create_media end ----------------\n')
+				
+				elif action == 'ts-':
+					self.create_media(phrase_start, phrase_end, - offset, 0)
+					print('--------------- create_media end ----------------\n')
+				
+				elif action == 'ts+':
+					self.create_media(phrase_start, phrase_end, offset, 0)
+					print('--------------- create_media end ----------------\n')
+				
+				elif action == 'te-':
+					self.create_media(phrase_start, phrase_end, 0, - offset)
+					print('--------------- create_media end ----------------\n')
+				
+				elif action == 'te+':
+					self.create_media(phrase_start, phrase_end, 0, offset)
 					print('--------------- create_media end ----------------\n')
 					
+				elif action == '':
+					self.audio_tools.play_mp3(self.cfg_reader)
+				
+				elif action == 's':
+					self.audio_tools.save_sample(offset, self.cfg_reader)
+				
 				elif action == 'q':
 					break
 

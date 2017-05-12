@@ -13,6 +13,20 @@ class FS:
 		self.err = True
 		self.err_desc = "\n Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc
 
+	def file_exists(self, file_path):
+		if os.path.isfile(file_path):
+			return True
+		else:
+			return False
+			
+	def folder_exists(self, folder_path):
+		if os.os.direxists(folder_path):
+			return True
+		else:
+			return False
+	
+	
+	
 	def test(self):
 		print('HiHiHi!!!')
 	

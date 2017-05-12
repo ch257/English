@@ -11,9 +11,16 @@ class MainProgram:
 		self.err = True
 		self.err_desc = "\n Error in '" + self.__class__.__name__ + "." + method_name + "':" + err_desc
 
-	def main(self):
+	def check_file_exists(self, file_path):
 		fs = FS()
-		fs.test()
+		return fs.file_exists(file_path)
+	
+	def main(self):
+		# file_path = 'work'
+		file_path = '.gitignore'
+		print(self.check_file_exists(file_path))
+		
+		
 		
 main_program = MainProgram(sys.argv)
 main_program.main()

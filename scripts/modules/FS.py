@@ -20,7 +20,7 @@ class FS:
 			return False
 			
 	def folder_exists(self, folder_path):
-		if os.os.direxists(folder_path):
+		if os.path.isdir(folder_path):
 			return True
 		else:
 			return False

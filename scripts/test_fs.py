@@ -15,10 +15,15 @@ class MainProgram:
 		fs = FS()
 		return fs.file_exists(file_path)
 	
+	def check_folder_exists(self, folder_path):
+		fs = FS()
+		return fs.folder_exists(folder_path)
+	
 	def main(self):
-		# file_path = 'work'
+		folder_path = 'work'
 		file_path = '.gitignore'
-		print(self.check_file_exists(file_path))
+		# print(self.check_file_exists(file_path))
+		print(self.check_folder_exists(file_path))
 		
 		
 		

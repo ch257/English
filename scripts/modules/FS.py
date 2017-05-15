@@ -25,10 +25,31 @@ class FS:
 		else:
 			return False
 	
+	def create_folder(self, folder_path):
+		if not self.err:
+			if not self.folder_exists(folder_path):
+				try:
+					os.makedirs(folder_path)
+				except PermissionError:
+					self.rise_err(sys._getframe().f_code.co_name, "'you have no permissions to create folder `" + folder_path + "`'")
 	
-	
-	def test(self):
-		print('HiHiHi!!!')
+	def delete_folder(self, folder_path):
+		if not self.err:
+			if self.folder_exists(folder_path):
+				try:
+					shutil.rmtree(folder_path)
+				except PermissionError:
+					self.rise_err(sys._getframe().f_code.co_name, "'you have no permissions to delete folder `" + folder_path + "`'")
+
+	def delete_file(self, file_path):
+		if not self.err:
+			if self.file_exists(file_path):
+				try:
+					os.remove(file_path)
+				except PermissionError:
+					self.rise_err(sys._getframe().f_code.co_name, "'you have no permissions to delete file `" + file_path + "`'")
+			else:
+				self.rise_err(sys._getframe().f_code.co_name, "'you have no access to file `" + file_path + "`'")
 	
 	
 	

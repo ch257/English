@@ -20,10 +20,16 @@ class MainProgram:
 		return fs.folder_exists(folder_path)
 	
 	def main(self):
-		folder_path = 'work'
-		file_path = '.gitignore'
+		# file_path = 'work/test_fs/access/deny.txt'
+		# folder_path = 'work/test_fs/deny'
 		# print(self.check_file_exists(file_path))
-		print(self.check_folder_exists(file_path))
+		# print(self.check_folder_exists(folder_path))
+		
+		folder_path = 'work/test_fs/write/fff'
+		fs = FS()
+		fs.delete_file(folder_path)
+		if fs.err:
+			print(fs.err_desc)
 		
 		
 		
